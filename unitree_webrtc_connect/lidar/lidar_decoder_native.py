@@ -21,23 +21,25 @@
 
 import numpy as np
 import lz4.block
+from typing import Any
 
-def decompress(compressed_data, decomp_size):
-    decompressed = lz4.block.decompress(
-        compressed_data,
-        uncompressed_size=decomp_size
-    )
+
+def _decompress(compressed_data: bytes, decomp_size: int):
+    decompressed = lz4.block.decompress(compressed_data, uncompressed_size=decomp_size)
     return decompressed
 
-def bits_to_points(buf, origin, resolution=0.05):
-    buf = np.frombuffer(bytearray(buf), dtype=np.uint8)
-    nonzero_indices = np.nonzero(buf)[0]
+
+def _bits_to_points(
+    buf: bytes, origin: tuple[float, float, float], resolution: float
+) -> np.ndarray:
+    np_buf = np.frombuffer(buf, dtype=np.uint8)
+    nonzero_indices = np.nonzero(np_buf)[0]
 
     if len(nonzero_indices) == 0:
         return np.empty((0, 3), dtype=np.float64)
 
     # Get byte values and unpack to bits (MSB first matches original logic)
-    byte_values = buf[nonzero_indices]
+    byte_values = np_buf[nonzero_indices]
     bits = np.unpackbits(byte_values).reshape(-1, 8)
 
     # Calculate base coordinates for each nonzero byte
@@ -57,12 +59,13 @@ def bits_to_points(buf, origin, resolution=0.05):
 
     return points * resolution + origin
 
+
 class LidarDecoder:
-    def decode(self, compressed_data, data):
-        decompressed = decompress(compressed_data, data["src_size"])
-        points = bits_to_points(decompressed, data["origin"], data["resolution"])
+    def decode(self, compressed_data: bytes, data: dict[str, Any]) -> dict[str, Any]:
+        decompressed = _decompress(compressed_data, data["src_size"])
+        points = _bits_to_points(decompressed, data["origin"], data["resolution"])
 
         return {
-                "points": points,
-                # "raw": compressed_data,
+            "points": points,
+            "raw": compressed_data,
         }
