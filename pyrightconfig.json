@@ -1,0 +1,8 @@
+{
+    "reportUnknownMemberType": "none",
+    "useLibraryCodeForTypes": false,
+
+    "exclude": [
+        "examples/**",
+    ]
+}
