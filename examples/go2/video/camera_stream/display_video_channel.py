@@ -43,7 +43,7 @@ def main():
                 await conn.connect()
 
                 # Switch video channel on and start receiving video frames
-                conn.video.switchVideoChannel(True)
+                conn.video.switch_video_channel(True)
 
                 # Add callback to handle received video frames
                 conn.video.add_track_callback(recv_camera_stream)

@@ -2,12 +2,13 @@ import asyncio
 import logging
 import json
 import sys
+import logging
 from unitree_webrtc_connect.webrtc_driver import UnitreeWebRTCConnection, WebRTCConnectionMethod
 from unitree_webrtc_connect.constants import RTC_TOPIC, SPORT_CMD
 
-# Enable logging for debugging
-logging.basicConfig(level=logging.FATAL)
-    
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.WARNING)
+
 async def main():
     try:
         # Choose a connection method (uncomment the correct one)
@@ -20,7 +21,7 @@ async def main():
         await conn.connect()
 
         ####### NORMAL MODE ########
-        print("Checking current motion mode...")
+        logger.info("Checking current motion mode...")
 
         # Get the current motion_switcher status
         response = await conn.datachannel.pub_sub.publish_request_new(

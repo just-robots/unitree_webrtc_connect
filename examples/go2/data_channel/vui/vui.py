@@ -70,7 +70,7 @@ async def main():
                 "api_id": 1007,
                 "parameter": 
                 {
-                    "color": VUI_COLOR.PURPLE,
+                    "color": VUI_COLOR.PURPLE.value,
                     "time": 5
                 }
             }
@@ -86,7 +86,7 @@ async def main():
                 "api_id": 1007,
                 "parameter": 
                 {
-                    "color": VUI_COLOR.CYAN,
+                    "color": VUI_COLOR.CYAN.value,
                     "time": 5,
                     "flash_cycle": 1000  # Flash every second
                 }
