@@ -44,7 +44,7 @@ async def main():
         await conn.connect()
 
         # Switch audio channel on and start receiving audio frames
-        conn.audio.switchAudioChannel(True)
+        conn.audio.switch_audio_channel(True)
 
         # Add callback to handle received audio frames
         conn.audio.add_track_callback(recv_audio_stream)

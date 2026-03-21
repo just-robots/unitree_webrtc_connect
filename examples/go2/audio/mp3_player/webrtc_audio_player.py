@@ -17,7 +17,7 @@ async def main():
         logger.info("WebRTC connection established")
 
         # Create audio hub instance
-        audio_hub = WebRTCAudioHub(conn, logger)
+        audio_hub = WebRTCAudioHub(conn)
         logger.info("Audio hub initialized")
 
         # Define audio file to upload and play
@@ -27,32 +27,36 @@ async def main():
 
         # Get the list of available audio files
         response = await audio_hub.get_audio_list()
-        if response and isinstance(response, dict):
-            data_str = response.get('data', {}).get('data', '{}')
-            audio_list = json.loads(data_str).get('audio_list', [])
-            
-            # Extract filename without extension
-            filename = os.path.splitext(audio_file)[0]
-            print(audio_list)
-            # Check if file already exists by CUSTOM_NAME and store UUID
-            existing_audio = next((audio for audio in audio_list if audio['CUSTOM_NAME'] == filename), None)
-            if existing_audio:
-                print(f"Audio file {filename} already exists, skipping upload")
-                uuid = existing_audio['UNIQUE_ID']
-            else:
-                print(f"Audio file {filename} not found, proceeding with upload")
-                uuid = None
+        if not response or not isinstance(response, dict):
+            raise RuntimeError("failed to get audio list")
+        
+        data_str = response.get('data', {}).get('data', '{}')
+        audio_list = json.loads(data_str).get('audio_list', [])
+        
+        # Extract filename without extension
+        filename = os.path.splitext(audio_file)[0]
+        print(audio_list)
+        # Check if file already exists by CUSTOM_NAME and store UUID
+        existing_audio = next((audio for audio in audio_list if audio['CUSTOM_NAME'] == filename), None)
+        if existing_audio:
+            print(f"Audio file {filename} already exists, skipping upload")
+            uuid = existing_audio['UNIQUE_ID']
+        else:
+            print(f"Audio file {filename} not found, proceeding with upload")
+            uuid = None
 
-                # Upload the audio file
-                logger.info("Starting audio file upload...")
-                await audio_hub.upload_audio_file(audio_file_path)
-                logger.info("Audio file upload completed")
-                response = await audio_hub.get_audio_list()
-                existing_audio = next((audio for audio in audio_list if audio['CUSTOM_NAME'] == filename), None)
-                uuid = existing_audio['UNIQUE_ID']
+            # Upload the audio file
+            logger.info("Starting audio file upload...")
+            await audio_hub.upload_audio_file(audio_file_path)
+            logger.info("Audio file upload completed")
+            response = await audio_hub.get_audio_list()
+            existing_audio = next((audio for audio in audio_list if audio['CUSTOM_NAME'] == filename), None)
+            if existing_audio is None:
+                raise ValueError()
+            uuid = existing_audio['UNIQUE_ID']
 
         # Play the uploaded audio file using its filename as UUID
-        
+    
         print(f"Starting audio playback of file: {uuid}")
         await audio_hub.play_by_uuid(uuid)
         logger.info("Audio playback completed")
