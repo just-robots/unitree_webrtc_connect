@@ -7,7 +7,7 @@ from aiortc.contrib.media import MediaPlayer
 
 
 # Enable logging for debugging
-logging.basicConfig(level=logging.FATAL)
+logging.basicConfig(level=logging.INFO)
 
 async def main():
     try:

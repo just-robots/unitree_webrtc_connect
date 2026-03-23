@@ -5,7 +5,7 @@ from unitree_webrtc_connect.webrtc_driver import UnitreeWebRTCConnection, WebRTC
 from unitree_webrtc_connect.constants import RTC_TOPIC
 
 # Enable logging for debugging
-logging.basicConfig(level=logging.FATAL)
+logging.basicConfig(level=logging.INFO)
 
 def display_data(message):
 
@@ -56,13 +56,8 @@ def display_data(message):
 
 
 async def main():
+    conn = UnitreeWebRTCConnection(WebRTCConnectionMethod.LocalAP)
     try:
-        # Choose a connection method (uncomment the correct one)
-        conn = UnitreeWebRTCConnection(WebRTCConnectionMethod.LocalSTA, ip="192.168.12.1")
-        # conn = UnitreeWebRTCConnection(WebRTCConnectionMethod.LocalSTA, serialNumber="B42D2000XXXXXXXX")
-        # conn = UnitreeWebRTCConnection(WebRTCConnectionMethod.Remote, serialNumber="B42D2000XXXXXXXX", username="email@gmail.com", password="pass")
-        # conn = UnitreeWebRTCConnection(WebRTCConnectionMethod.LocalAP)
-
         # Connect to the WebRTC service.
         await conn.connect()
 
@@ -84,6 +79,8 @@ async def main():
     except ValueError as e:
         # Log any value errors that occur during the process.
         logging.error(f"An error occurred: {e}")
+    finally:
+        await conn.disconnect()
 
 
 if __name__ == "__main__":

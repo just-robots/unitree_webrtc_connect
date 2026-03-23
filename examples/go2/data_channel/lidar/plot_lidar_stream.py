@@ -1,9 +1,10 @@
-""" @MrRobotoW at The RoboVerse Discord """
-""" robert.wagoner@gmail.com """
-""" 01/30/2025 """
-""" Inspired from lidar_stream.py by @legion1581 at The RoboVerse Discord """
+""" 
+@MrRobotoW at The RoboVerse Discord
+robert.wagoner@gmail.com
+01/30/2025
+Inspired from lidar_stream.py by @legion1581 at The RoboVerse Discord
+"""
 
-VERSION = "1.0.18"
 
 import asyncio
 import logging
@@ -14,9 +15,10 @@ from flask_socketio import SocketIO
 from unitree_webrtc_connect.webrtc_driver import UnitreeWebRTCConnection, WebRTCConnectionMethod
 import argparse
 from datetime import datetime
-import os
 import sys
 import ast
+
+VERSION = "1.0.18"
 
 # Increase the field size limit for CSV reading
 csv.field_size_limit(sys.maxsize)
@@ -25,7 +27,7 @@ csv.field_size_limit(sys.maxsize)
 app = Flask(__name__)
 socketio = SocketIO(app, async_mode='threading')
 
-logging.basicConfig(level=logging.FATAL)
+logging.basicConfig(level=logging.INFO)
 
 # Constants to enable/disable features
 ENABLE_POINT_CLOUD = True
@@ -127,13 +129,10 @@ async def lidar_webrtc_connection():
     retry_attempts = 0
 
     # checkArgs()
-
+    
     while retry_attempts < MAX_RETRY_ATTEMPTS:
+        conn = UnitreeWebRTCConnection(WebRTCConnectionMethod.LocalSTA, ip="192.168.12.1")  # WebRTC IP
         try:
-            conn = UnitreeWebRTCConnection(WebRTCConnectionMethod.LocalSTA, ip="192.168.12.1")  # WebRTC IP
-            # _webrtc_connection = UnitreeWebRTCConnection(WebRTCConnectionMethod.Remote, serialNumber="B42D2000XXXXXXXX", username="email@gmail.com", password="pass")
-            # _webrtc_connection = UnitreeWebRTCConnection(WebRTCConnectionMethod.LocalAP)
-
             # Connect to WebRTC
             logging.info("Connecting to WebRTC...")
             await conn.connect()
@@ -141,7 +140,7 @@ async def lidar_webrtc_connection():
             retry_attempts = 0  # Reset retry attempts on successful connection
 
             # Disable traffic saving mode
-            await conn.datachannel.disableTrafficSaving(True)
+            await conn.datachannel.disable_traffic_aving(True)
 
             # Turn LIDAR sensor on
             conn.datachannel.pub_sub.publish_without_callback("rt/utlidar/switch", "on")

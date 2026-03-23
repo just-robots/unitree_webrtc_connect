@@ -5,7 +5,7 @@ from unitree_webrtc_connect.webrtc_driver import UnitreeWebRTCConnection, WebRTC
 from unitree_webrtc_connect.constants import RTC_TOPIC
 
 # Enable logging for debugging
-logging.basicConfig(level=logging.FATAL)
+logging.basicConfig(level=logging.INFO)
 
 def display_data(message):
 

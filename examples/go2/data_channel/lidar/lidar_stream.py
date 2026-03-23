@@ -4,17 +4,11 @@ import sys
 from unitree_webrtc_connect.webrtc_driver import UnitreeWebRTCConnection, WebRTCConnectionMethod
 
 # Enable logging for debugging
-logging.basicConfig(level=logging.FATAL)
+logging.basicConfig(level=logging.INFO)
     
 async def main():
+    conn = UnitreeWebRTCConnection(WebRTCConnectionMethod.LocalAP)
     try:
-        # Choose a connection method (uncomment the correct one)
-        conn = UnitreeWebRTCConnection(WebRTCConnectionMethod.LocalSTA, ip="192.168.8.181")
-        # conn = UnitreeWebRTCConnection(WebRTCConnectionMethod.LocalSTA, serialNumber="B42D2000XXXXXXXX")
-        # conn = UnitreeWebRTCConnection(WebRTCConnectionMethod.Remote, serialNumber="B42D2000XXXXXXXX", username="email@gmail.com", password="pass")
-        # conn = UnitreeWebRTCConnection(WebRTCConnectionMethod.LocalAP)
-
-        # Connect to the WebRTC service.
         await conn.connect()
 
         # Disable traffic saving mode on the data channel.
@@ -41,6 +35,8 @@ async def main():
     except ValueError as e:
         # Log any value errors that occur during the process.
         logging.error(f"An error occurred: {e}")
+    finally:
+        await conn.disconnect()
 
 if __name__ == "__main__":
     try:

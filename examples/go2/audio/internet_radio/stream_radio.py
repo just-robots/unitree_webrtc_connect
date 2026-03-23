@@ -28,6 +28,8 @@ async def main():
 
     except ValueError as e:
         logging.error(e)
+    finally:
+        await conn.disconnect()
 
 if __name__ == "__main__":
     try:

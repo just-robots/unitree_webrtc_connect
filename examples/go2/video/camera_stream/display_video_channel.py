@@ -16,16 +16,13 @@ from unitree_webrtc_connect.webrtc_driver import UnitreeWebRTCConnection, WebRTC
 from aiortc import MediaStreamTrack
 
 # Enable logging for debugging
-logging.basicConfig(level=logging.FATAL)
+logging.basicConfig(level=logging.INFO)
 
 def main():
     frame_queue = Queue()
 
     # Choose a connection method (uncomment the correct one)
-    conn = UnitreeWebRTCConnection(WebRTCConnectionMethod.LocalSTA, ip="192.168.12.1")
-    # conn = UnitreeWebRTCConnection(WebRTCConnectionMethod.LocalSTA, serialNumber="B42D2000XXXXXXXX")
-    # conn = UnitreeWebRTCConnection(WebRTCConnectionMethod.Remote, serialNumber="B42D2000XXXXXXXX", username="email@gmail.com", password="pass")
-    # conn = UnitreeWebRTCConnection(WebRTCConnectionMethod.LocalAP)
+    conn = UnitreeWebRTCConnection(WebRTCConnectionMethod.LocalAP)
 
     # Async function to receive video frames and put them in the queue
     async def recv_camera_stream(track: MediaStreamTrack):
@@ -49,6 +46,8 @@ def main():
                 conn.video.add_track_callback(recv_camera_stream)
             except Exception as e:
                 logging.error(f"Error in WebRTC connection: {e}")
+            finally:
+                await conn.disconnect()
 
         # Run the setup coroutine and then start the event loop
         loop.run_until_complete(setup())

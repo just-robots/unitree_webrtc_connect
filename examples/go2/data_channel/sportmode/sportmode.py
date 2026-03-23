@@ -7,16 +7,11 @@ from unitree_webrtc_connect.webrtc_driver import UnitreeWebRTCConnection, WebRTC
 from unitree_webrtc_connect.constants import RTC_TOPIC, SPORT_CMD
 
 logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.WARNING)
+logging.basicConfig(level=logging.INFO)
 
 async def main():
+    conn = UnitreeWebRTCConnection(WebRTCConnectionMethod.LocalAP)
     try:
-        # Choose a connection method (uncomment the correct one)
-        conn = UnitreeWebRTCConnection(WebRTCConnectionMethod.LocalSTA, ip="192.168.12.1")
-        # conn = UnitreeWebRTCConnection(WebRTCConnectionMethod.LocalSTA, serialNumber="B42D2000XXXXXXXX")
-        # conn = UnitreeWebRTCConnection(WebRTCConnectionMethod.Remote, serialNumber="B42D2000XXXXXXXX", username="email@gmail.com", password="pass")
-        # conn = UnitreeWebRTCConnection(WebRTCConnectionMethod.LocalAP)
-
         # Connect to the WebRTC service.
         await conn.connect()
 
@@ -52,10 +47,70 @@ async def main():
             {"api_id": SPORT_CMD["Hello"]}
         )
 
-        await asyncio.sleep(1)
+        # await asyncio.sleep(1)
 
         # # Perform a "Move Forward" movement
         # print("Moving forward...")
+        # await conn.datachannel.pub_sub.publish_request_new(
+        #     RTC_TOPIC["SPORT_MOD"], 
+        #     {
+        #         "api_id": SPORT_CMD["Move"],
+        #         "parameter": {"x": 0.5, "y": 0, "z": 0}
+        #     }
+        # )
+
+        # await asyncio.sleep(3)
+
+        # # Perform a "Move Backward" movement
+        # print("Moving backward...")
+        # await conn.datachannel.pub_sub.publish_request_new(
+        #     RTC_TOPIC["SPORT_MOD"], 
+        #     {
+        #         "api_id": SPORT_CMD["Move"],
+        #         "parameter": {"x": +0.5, "y": 0, "z": 0}
+        #     }
+        # )
+
+        # await asyncio.sleep(3)
+
+        # ####### AI MODE ########
+
+        # # Switch to AI mode
+        # print("Switching motion mode to 'AI'...")
+        # await conn.datachannel.pub_sub.publish_request_new(
+        #     RTC_TOPIC["MOTION_SWITCHER"], 
+        #     {
+        #         "api_id": 1002,
+        #         "parameter": {"name": "ai"}
+        #     }
+        # )
+        # await asyncio.sleep(10)
+
+        # # Switch to Handstand Mode
+        # print("Switching to Handstand Mode...")
+        # await conn.datachannel.pub_sub.publish_request_new(
+        #     RTC_TOPIC["SPORT_MOD"], 
+        #     {
+        #         "api_id": SPORT_CMD["StandOut"],
+        #         "parameter": {"data": True}
+        #     }
+        # )
+
+        # await asyncio.sleep(5)
+
+        # # Switch back to StandUp Mode
+        # print("Switching back to StandUp Mode...")
+        # await conn.datachannel.pub_sub.publish_request_new(
+        #     RTC_TOPIC["SPORT_MOD"], 
+        #     {
+        #         "api_id": SPORT_CMD["StandOut"],
+        #         "parameter": {"data": False}
+        #     }
+        # )
+
+        # await asyncio.sleep(5)
+        # Perform a backflip
+        # print(f"Performing BackFlip")
         # await conn.datachannel.pub_sub.publish_request_new(
         #     RTC_TOPIC["SPORT_MOD"], 
         #     {
@@ -84,6 +139,8 @@ async def main():
     except ValueError as e:
         # Log any value errors that occur during the process.
         logging.error(f"An error occurred: {e}")
+    finally:
+        await conn.disconnect()
 
 if __name__ == "__main__":
     try:
