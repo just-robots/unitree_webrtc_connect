@@ -12,7 +12,7 @@ async def main():
         await conn.connect()
 
         # Disable traffic saving mode on the data channel.
-        await conn.datachannel.disableTrafficSaving(True)
+        await conn.datachannel.disable_traffic_aving(True)
 
         # set the decoder type (libvoxel or native)
         conn.datachannel.set_decoder(decoder_type='libvoxel')
