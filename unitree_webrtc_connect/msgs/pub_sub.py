@@ -51,7 +51,7 @@ class WebRTCDataChannelPubSub:
             channel.send(message)
 
             # Log the message being published
-            logger.info(f"> message sent: {message}")
+            logger.debug(f"> message sent: {message}")
 
             # Store the future so it can be completed when the response is received
             uuid = None
@@ -91,7 +91,7 @@ class WebRTCDataChannelPubSub:
             self.channel.send(message)
 
             # Log the message being published
-            logger.info(f"> message sent: {message}")
+            logger.debug(f"> message sent: {message}")
         else:
             raise RuntimeError("Data channel is not open")
 

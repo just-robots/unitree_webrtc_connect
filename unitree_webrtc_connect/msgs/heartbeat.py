@@ -48,4 +48,4 @@ class WebRTCDataChannelHeartBeat:
         """Handle a received heartbeat message."""
         _ = message
         self.heartbeat_response = time.time()
-        logger.info("Heartbeat response received.")
+        logger.debug("Heartbeat response received.")
