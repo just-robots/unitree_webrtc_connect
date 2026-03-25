@@ -215,6 +215,8 @@ class UnitreeWebRTCConnection:
                 "Go2 is connected by another WebRTC client. Close your mobile APP and try again."
             )
 
+        await asyncio.sleep(5)
+
         remote_sdp = RTCSessionDescription(sdp=peer_answer["sdp"], type=peer_answer["type"])
         await self.pc.setRemoteDescription(remote_sdp)
 
