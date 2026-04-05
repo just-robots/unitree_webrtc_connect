@@ -2,7 +2,6 @@ import asyncio
 import logging
 import json
 import sys
-import logging
 from unitree_webrtc_connect.webrtc_driver import UnitreeWebRTCConnection, WebRTCConnectionMethod
 from unitree_webrtc_connect.constants import RTC_TOPIC, SPORT_CMD
 
